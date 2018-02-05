@@ -190,8 +190,8 @@ module.exports = function(logger){
             // handle the share
             handlers.share(isValidShare, isValidBlock, data);
             
-            // send to master for pplnt time tracking
-            process.send({type: 'shareTrack', thread:(parseInt(forkId)+1), coin:poolOptions.coin.name, isValidShare:isValidShare, isValidBlock:isValidBlock, data:data});
+            // send to master for pplnt time tracking --no to share track
+            //process.send({type: 'shareTrack', thread:(parseInt(forkId)+1), coin:poolOptions.coin.name, isValidShare:isValidShare, isValidBlock:isValidBlock, data:data});
             
         }).on('difficultyUpdate', function(workerName, diff){
             logger.debug(logSystem, logComponent, logSubCat, 'Difficulty update to diff ' + diff + ' workerName=' + JSON.stringify(workerName));

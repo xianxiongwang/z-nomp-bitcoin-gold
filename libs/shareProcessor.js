@@ -70,24 +70,32 @@ module.exports = function(logger, poolConfig){
     });
 
     this.handleShare = function(isValidShare, isValidBlock, shareData) {
-
+        /*
         if (isValidShare) {
             redisCommands.push(['hincrbyfloat', coin + ':shares:roundCurrent', shareData.worker, shareData.difficulty]);
             redisCommands.push(['hincrby', coin + ':stats', 'validShares', 1]);
         } else {
             redisCommands.push(['hincrby', coin + ':stats', 'invalidShares', 1]);
-        }
+        }*/
 
         /* Stores share diff, worker, and unique value with a score that is the timestamp. Unique value ensures it
            doesn't overwrite an existing entry, and timestamp as score lets us query shares from last X minutes to
            generate hashrate for each worker and pool. */
+         
         var dateNow = Date.now();
-        var hashrateData = [ isValidShare ? shareData.difficulty : -shareData.difficulty, shareData.worker, dateNow];
+        //shares,block reward(12.5),block diff,worker name,time
+        var hashrateData = [isValidShare ? shareData.difficulty : -shareData.difficulty,
+             shareData.coinbaseReward,
+             shareData.blockDiff,
+             shareData.worker, 
+             dateNow];
         redisCommands.push(['zadd', coin + ':hashrate', dateNow / 1000 | 0, hashrateData.join(':')]);
 
         if (isValidBlock){
+            /*
             redisCommands.push(['rename', coin + ':shares:roundCurrent', coin + ':shares:round' + shareData.height]);
             redisCommands.push(['rename', coin + ':shares:timesCurrent', coin + ':shares:times' + shareData.height]);
+            */
             redisCommands.push(['sadd', coin + ':blocksPending', [shareData.blockHash, shareData.txHash, shareData.height, shareData.worker, dateNow].join(':')]);
             redisCommands.push(['hincrby', coin + ':stats', 'validBlocks', 1]);
             lastRedisSync = 0; // in order to submit data to redis
