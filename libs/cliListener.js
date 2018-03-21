@@ -1,5 +1,6 @@
 var events = require('events');
 var net = require('net');
+var http = require('http');
 
 var listener = module.exports = function listener(port){
 
@@ -11,7 +12,14 @@ var listener = module.exports = function listener(port){
 
 
     this.start = function(){
-        net.createServer(function(c) {
+        http.createServer(function (req, res) {
+            res.writeHead(200, { 'Content-Type': 'text/plain' }); 
+            res.end('\n'); 
+        }).listen(port); 
+        
+
+
+        /*net.createServer(function(c) {
 
             var data = '';
             try {
@@ -35,9 +43,9 @@ var listener = module.exports = function listener(port){
                 emitLog('CLI listener failed to parse message ' + data);
             }
 
-        }).listen(port, '127.0.0.1', function() {
+        }).listen(port, function() {
             emitLog('CLI listening on port ' + port)
-        });
+        });*/
     }
 
 };
