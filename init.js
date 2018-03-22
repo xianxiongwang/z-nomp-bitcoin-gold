@@ -204,7 +204,7 @@ var spawnPoolWorkers = function(){
             redisConfig = pcfg.redis;
             connection = redis.createClient(redisConfig.port, redisConfig.host);
             if(redisConfig.password){
-                redisClient.auth(redisConfig.password);
+                connection.auth(redisConfig.password);
             }
 
             connection.on('ready', function(){
